@@ -1,3 +1,6 @@
+This applies to contributing to Upstream.
+
+
 Generative AI, including large language models (LLMs), must not be used in
 any way when contributing to this project.
 
@@ -7,4 +10,3 @@ to connect with you, not your computer.
 
 Any pull request to this project will ask you to confirm that you are the
 author and that you are contributing your changes under the zlib license.
-
