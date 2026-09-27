@@ -104,13 +104,12 @@ set(PHYSFS_SRCS
     src/physfs_archiver_unpacked.c
     src/physfs_archiver_grp.c
     src/physfs_archiver_hog.c
-    src/physfs_archiver_7z.c
     src/physfs_archiver_mvl.c
     src/physfs_archiver_qpak.c
     src/physfs_archiver_rofs.c
     src/physfs_archiver_wad.c
     src/physfs_archiver_csm.c
-    src/physfs_archiver_zip.c
+    src/physfs_archiver_unarr.c
     src/physfs_archiver_slb.c
     src/physfs_archiver_iso9660.c
     src/physfs_archiver_vdf.c
@@ -134,6 +133,23 @@ endif()
 option(PHYSFS_ARCHIVE_7Z "Enable 7zip support" TRUE)
 if(NOT PHYSFS_ARCHIVE_7Z)
     add_definitions(-DPHYSFS_SUPPORTS_7Z=0)
+endif()
+
+option(PHYSFS_ARCHIVE_TAR "Enable TAR support" TRUE)
+if(NOT PHYSFS_ARCHIVE_TAR)
+    add_definitions(-DPHYSFS_SUPPORTS_TAR=0)
+endif()
+
+option(PHYSFS_ARCHIVE_RAR "Enable RAR support" TRUE)
+if(NOT PHYSFS_ARCHIVE_RAR)
+    add_definitions(-DPHYSFS_SUPPORTS_RAR=0)
+endif()
+
+set(PHYSFS_USES_UNARR FALSE)
+if(PHYSFS_ARCHIVE_ZIP OR PHYSFS_ARCHIVE_7Z OR PHYSFS_ARCHIVE_TAR OR PHYSFS_ARCHIVE_RAR)
+    set(PHYSFS_USES_UNARR TRUE)
+    find_package(unarr CONFIG REQUIRED)
+    list(APPEND PC_PRIVATE_REQUIRES "libunarr")
 endif()
 
 option(PHYSFS_ARCHIVE_GRP "Enable Build Engine GRP support" TRUE)
@@ -237,6 +253,9 @@ if(PHYSFS_BUILD_STATIC)
     endif()
     target_include_directories(physfs-static PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>")
     target_link_libraries(physfs-static PRIVATE ${OPTIONAL_LIBRARY_LIBS} ${OTHER_LDFLAGS})
+    if(PHYSFS_ARCHIVE_ZIP OR PHYSFS_ARCHIVE_7Z OR PHYSFS_ARCHIVE_TAR OR PHYSFS_ARCHIVE_RAR)
+        target_link_libraries(physfs-static PRIVATE unarr::unarr)
+    endif()
     list(APPEND PHYSFS_INSTALL_TARGETS "physfs-static")
 endif()
 
@@ -269,6 +288,9 @@ if(PHYSFS_BUILD_SHARED)
     endif()
     target_include_directories(physfs-shared PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>")
     target_link_libraries(physfs-shared PRIVATE ${OPTIONAL_LIBRARY_LIBS} ${OTHER_LDFLAGS})
+    if(PHYSFS_ARCHIVE_ZIP OR PHYSFS_ARCHIVE_7Z OR PHYSFS_ARCHIVE_TAR OR PHYSFS_ARCHIVE_RAR)
+        target_link_libraries(physfs-shared PRIVATE unarr::unarr)
+    endif()
     list(APPEND PHYSFS_INSTALL_TARGETS "physfs-shared")
 endif()
 
@@ -447,6 +469,8 @@ endmacro()
 message(STATUS "PhysicsFS will build with the following options:")
 message_bool_option("ZIP support" PHYSFS_ARCHIVE_ZIP)
 message_bool_option("7zip support" PHYSFS_ARCHIVE_7Z)
+message_bool_option("TAR support" PHYSFS_ARCHIVE_TAR)
+message_bool_option("RAR support" PHYSFS_ARCHIVE_RAR)
 message_bool_option("GRP support" PHYSFS_ARCHIVE_GRP)
 message_bool_option("WAD support" PHYSFS_ARCHIVE_WAD)
 message_bool_option("CSM support" PHYSFS_ARCHIVE_CSM)

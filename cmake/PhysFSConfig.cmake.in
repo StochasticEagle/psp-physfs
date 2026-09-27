@@ -7,6 +7,12 @@ set_package_properties(PhysicsFS PROPERTIES
 @PACKAGE_INIT@
 
 set(PHYSFS_PLATFORM_SDL3 @PHYSFS_PLATFORM_SDL3@)
+set(PHYSFS_USES_UNARR @PHYSFS_USES_UNARR@)
+
+if(PHYSFS_USES_UNARR)
+    include(CMakeFindDependencyMacro)
+    find_dependency(unarr CONFIG)
+endif()
 
 set(PhysFS_PhysFS_FOUND)
 

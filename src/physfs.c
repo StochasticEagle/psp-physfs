@@ -1170,8 +1170,13 @@ static int initStaticArchivers(void)
         REGISTER_STATIC_ARCHIVER(ZIP);
     #endif
     #if PHYSFS_SUPPORTS_7Z
-        SZIP_global_init();
         REGISTER_STATIC_ARCHIVER(7Z);
+    #endif
+    #if PHYSFS_SUPPORTS_TAR
+        REGISTER_STATIC_ARCHIVER(TAR);
+    #endif
+    #if PHYSFS_SUPPORTS_RAR
+        REGISTER_STATIC_ARCHIVER(RAR);
     #endif
     #if PHYSFS_SUPPORTS_GRP
         REGISTER_STATIC_ARCHIVER(GRP);

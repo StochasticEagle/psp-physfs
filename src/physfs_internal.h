@@ -81,6 +81,8 @@ extern "C" {
 extern const PHYSFS_Archiver __PHYSFS_Archiver_DIR;
 extern const PHYSFS_Archiver __PHYSFS_Archiver_ZIP;
 extern const PHYSFS_Archiver __PHYSFS_Archiver_7Z;
+extern const PHYSFS_Archiver __PHYSFS_Archiver_TAR;
+extern const PHYSFS_Archiver __PHYSFS_Archiver_RAR;
 extern const PHYSFS_Archiver __PHYSFS_Archiver_GRP;
 extern const PHYSFS_Archiver __PHYSFS_Archiver_QPAK;
 extern const PHYSFS_Archiver __PHYSFS_Archiver_ROFS;
@@ -197,6 +199,12 @@ void __PHYSFS_smallFree(void *ptr);
 #ifndef PHYSFS_SUPPORTS_7Z
 #define PHYSFS_SUPPORTS_7Z PHYSFS_SUPPORTS_DEFAULT
 #endif
+#ifndef PHYSFS_SUPPORTS_TAR
+#define PHYSFS_SUPPORTS_TAR PHYSFS_SUPPORTS_DEFAULT
+#endif
+#ifndef PHYSFS_SUPPORTS_RAR
+#define PHYSFS_SUPPORTS_RAR PHYSFS_SUPPORTS_DEFAULT
+#endif
 #ifndef PHYSFS_SUPPORTS_GRP
 #define PHYSFS_SUPPORTS_GRP PHYSFS_SUPPORTS_DEFAULT
 #endif
@@ -234,11 +242,6 @@ void __PHYSFS_smallFree(void *ptr);
 #define PHYSFS_SUPPORTS_POD PHYSFS_SUPPORTS_DEFAULT
 #endif
 
-
-#if PHYSFS_SUPPORTS_7Z
-/* 7zip support needs a global init function called at startup (no deinit). */
-extern void SZIP_global_init(void);
-#endif
 
 /* The latest supported PHYSFS_Io::version value. */
 #define CURRENT_PHYSFS_IO_API_VERSION 0
